@@ -6,7 +6,8 @@ const user = require('./user');
 const github = require('./github');
 const pdf = require('./pdf');
 const pandoc = require('./pandoc');
-const assets = require('./assets')
+const assets = require('./assets');
+const publisher = require('./publisher');
 
 const resolvePath = pathToResolve => path.join(__dirname, '..', pathToResolve);
 
@@ -33,6 +34,10 @@ module.exports = (app, serveV4) => {
   }), user.paypalIpn);
     // List external assets
   app.get('/assets', assets.listAssets);
+  app.get('/publish', (req, res) => {
+    const fileName = req.params.fileName;
+    publisher.publish();
+  });
 
   if (serveV4) {
     /* eslint-disable global-require, import/no-unresolved */
