@@ -1,0 +1,3 @@
+[submodule "lesari"]
+	path = lesari
+	url = git@github.com:neptunus/lesari.git
