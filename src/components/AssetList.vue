@@ -1,5 +1,10 @@
 <template>
   <div class="asset__list">
+    <div class="asset__select">
+      <select id="" v-for="folder in assetFolders">
+        
+      </select>
+    </div>
     <ul>
       <li v-for="item in assetList">
         <span @click="(item) => playItem(item)" :data-key="item.Key">{{ item.fileName }}</span>
@@ -17,7 +22,7 @@ import editorSvc from '../services/editorSvc';
 
 export default {
   name: 'asset-list',
-  props: ['assetList'],
+  props: ['assetList', 'assetFolders'],
   components: {
 
   },

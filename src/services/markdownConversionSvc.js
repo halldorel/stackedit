@@ -132,6 +132,7 @@ export default {
     converter.core.ruler.enable([], true);
     converter.block.ruler.enable([], true);
     converter.inline.ruler.enable([], true);
+
     extensionSvc.initConverter(converter, options);
     Object.keys(startSectionBlockTypeMap).forEach((type) => {
       const rule = converter.renderer.rules[type] || converter.renderer.renderToken;

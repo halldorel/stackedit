@@ -35,7 +35,7 @@ export default {
   },
   data() {
     return {
-      src: 'https://menntamalastofnun-vod.s3.amazonaws.com/assets/komdu_og_skodadu_bilinn/be500ce1-8dc9-4dbf-a2b9-7e847a718180/HLS/06_2.m3u8',
+      src: '',
       hls: undefined,
     };
   },

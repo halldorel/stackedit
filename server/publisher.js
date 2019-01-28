@@ -1,7 +1,7 @@
 const exec = require('child_process');
 const fs = require('fs');
 
-const script_path = '../lesari/publish.sh'; 
+const script_path = '../lesari/publish.sh';
 
 function publishDemo() {
 	return exec(script_path + ' ');
@@ -18,5 +18,5 @@ function convertAndSave() {
 }
 
 exports.publishDemo = (req, res) => {
-
+	
 }

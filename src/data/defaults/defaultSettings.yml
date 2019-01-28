@@ -12,7 +12,7 @@ editor:
   # Automatic list numbering
   listAutoNumber: true
   # Display images in the editor
-  inlineImages: true
+  inlineImages: false
   # Use monospaced font only
   monospacedFontOnly: false
 
@@ -85,10 +85,6 @@ git:
 
 # Default content for new files
 newFileContent: |
-
-
-
-  > Written with [StackEdit](https://stackedit.io/).
 
 # Default properties for new files
 newFileProperties: |
