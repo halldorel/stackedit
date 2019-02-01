@@ -7,7 +7,7 @@
 </template>
 <script>
 
-import Hls from "Hls.js";
+import Hls from "hls.js";
 
 export default {
   name: 'video-preview',
