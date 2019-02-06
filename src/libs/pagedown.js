@@ -1384,8 +1384,10 @@ commandProto.addAssetReference = function (chunk, asset) {
   if (chunk.before.slice(-1) !== '\n') {
     chunk.before += '\n';
   }
-  chunk.before = chunk.before + "{data-video=\"" + asset + "\"}\n";
+
+  chunk.before = chunk.before + "{data-video=\"" + asset + "\"}";
   chunk.selection = "";
+  chunk.skipLines(1, 1, true);
   return chunk;
 }
 

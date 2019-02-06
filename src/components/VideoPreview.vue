@@ -12,10 +12,8 @@ import Hls from "hls.js";
 export default {
   name: 'video-preview',
   mounted() {
-
     if(Hls.isSupported()) {
       this.hls = new Hls();
-      console.log("we're HLSing!");
       this.hls.loadSource(this.src);
       this.hls.attachMedia(this.$refs.videoPlayer);
     }
@@ -43,5 +41,5 @@ export default {
 </script>
 
 <style lang="scss">
-.drasl { display: block; }
+  .drasl { display: block; }
 </style>

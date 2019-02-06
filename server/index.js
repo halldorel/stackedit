@@ -6,7 +6,8 @@ const user = require('./user');
 const github = require('./github');
 const pdf = require('./pdf');
 const pandoc = require('./pandoc');
-const assets = require('./assets')
+const assets = require('./assets');
+const lesari = require('./lesari');
 
 const resolvePath = pathToResolve => path.join(__dirname, '..', pathToResolve);
 
@@ -24,6 +25,9 @@ module.exports = (app, serveV4) => {
     app.use(compression());
   }
 
+
+  app.use(bodyParser.json());
+
   app.get('/oauth2/githubToken', github.githubToken);
   app.get('/userInfo', user.userInfo);
   app.post('/pdfExport', pdf.generate);
@@ -33,6 +37,7 @@ module.exports = (app, serveV4) => {
   }), user.paypalIpn);
     // List external assets
   app.get('/assets', assets.listAssets);
+  app.post('/publishLesari', lesari.publishLesari);
 
   if (serveV4) {
     /* eslint-disable global-require, import/no-unresolved */

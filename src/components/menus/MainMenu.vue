@@ -50,10 +50,10 @@
       <div><div class="menu-entry__label menu-entry__label--count" v-if="syncLocationCount">{{syncLocationCount}}</div> Synchronize</div>
       <span>Sync your files in the Cloud.</span>
     </menu-entry>
-    <menu-entry @click.native="setPanel('publish')">
+    <menu-entry @click.native="publishLesari">
       <icon-upload slot="icon"></icon-upload>
-      <div><div class="menu-entry__label menu-entry__label--count" v-if="publishLocationCount">{{publishLocationCount}}</div>Publish</div>
-      <span>Export your files to the web.</span>
+      <div>Publish Lesari</div>
+      <span>Publish to vefir.mms.is/lesari</span>
     </menu-entry>
     <menu-entry @click.native="setPanel('history')">
       <icon-history slot="icon"></icon-history>
@@ -154,6 +154,13 @@ export default {
     print() {
       window.print();
     },
+    async publishLesari() {
+      try {
+        await store.dispatch(''); 
+      } catch (e) {
+        // Cancel
+      }
+    }
   },
 };
 </script>
