@@ -5,6 +5,7 @@ const tmp = require('tmp');
 const user = require('./user');
 const path = require('path');
 const filenamify = require('filenamify');
+const slugify = require('slugify');
 
 let DEPLOY_URL = "/Users/halldor/Documents/mms/stackedit/lesari/books";
 
@@ -25,24 +26,32 @@ exports.publishLesari = (req, res) => {
     console.log(req.body);
     if(req.body.fileContent) {
       console.log(`Got file content of length ${req.body.fileContent.length}`);
+      if(req.body.fileContent.length > 4000000) {
+        reject("File is too big");
+      }
     } else {
       reject("No file submitted");
     }
     if(!req.body.fileName) {
       reject("No filename submitted");
     }
+    if(req.body.fileName.length > 60) {
+      reject("Filename is too long");
+    }
 
-    let fileName = filenamify(req.body.fileName);
+    let fileName = slugify(filenamify(req.body.fileName));
+    fileName = fileName + ".html";
 
     fs.writeFile(path.join(DEPLOY_URL, fileName), req.body.fileContent, function(err) {
       if(err) {
         reject(err);
       }
-      resolve();
+      resolve(fileName);
     });   
-  }).then(() => {
-    console.log("The file was saved!");
+  }).then((fileName) => {
+    console.log(fileName);
     res.statusCode = 201;
+    res.send(fileName);
     res.end();
   })
   .catch((err) => {

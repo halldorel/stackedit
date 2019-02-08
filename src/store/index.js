@@ -13,6 +13,7 @@ import file from './file';
 import findReplace from './findReplace';
 import folder from './folder';
 import layout from './layout';
+import lesari from './lesari';
 import modal from './modal';
 import notification from './notification';
 import queue from './queue';
@@ -41,6 +42,7 @@ const store = new Vuex.Store({
     findReplace,
     folder,
     layout,
+    lesari,
     modal,
     notification,
     publishLocation: locationTemplate(emptyPublishLocation),
