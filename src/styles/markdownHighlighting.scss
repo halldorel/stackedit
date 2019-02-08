@@ -253,6 +253,14 @@
     text-decoration: underline;
   }
 
+  .assetref {
+    display: block;
+    font-size: 0.65em;
+    padding: 0.2em;
+    border-radius: 3px;
+    background: $editor-color-light-high;
+  }
+
   .linkdef .url {
     color: $editor-color-light-high;
 

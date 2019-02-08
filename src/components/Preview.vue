@@ -66,8 +66,8 @@ export default {
           return;
         } else if (elt.attributes['data-video']) {
           this.videoUrl = elt.attributes['data-video'].value;
-          this.$refs.video.player.currentTime(0);
-          this.$refs.video.player.play();
+          this.$root.$emit('play_video', this.videoUrl);
+
         }
         elt = elt.parentNode;
       }
@@ -187,7 +187,10 @@ $corner-size: 110px;
 
 p[data-video] {
   cursor: pointer;
-  border: 1px solid #ccc;
+  border: 1px solid rgba(100, 100, 200, 1);
+  border-radius: 3px;
+  padding: 4px;
+  box-shadow: 0 0 1.5em rgba(0, 0, 0, 0.2);
 }
 
 .preview__button {

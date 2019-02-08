@@ -4,13 +4,12 @@ const _ = require('lodash');
 
 const s3 = new AWS.S3();
 
-const bucket = 'menntamalastofnun-vod'
+const bucket = 'menntamalastofnun-vod';
 
 function listAssets() {
   return new Promise((resolve, reject) => {
     let responseData = [];
     s3.listObjects({Bucket: bucket}).on('success', function handlePage(response) {
-      console.log(response.data);
       responseData.push(response.data["Contents"]);
 
       if (response.hasNextPage()) {

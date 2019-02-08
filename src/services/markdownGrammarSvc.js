@@ -302,6 +302,9 @@ export default {
         },
       },
     };
+    rest.assetref = {
+      pattern: /{data-video=".*"}/g,
+    };
     rest.comment = markup.comment;
     rest.tag = markup.tag;
     rest.url = urlPattern;
