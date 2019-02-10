@@ -52,7 +52,7 @@
     </menu-entry>
     <menu-entry @click.native="publishLesari">
       <icon-upload slot="icon"></icon-upload>
-      <div>Publish Lesari</div>
+      <div>Publish to Lesari</div>
       <span>Publish to vefir.mms.is/lesari</span>
     </menu-entry>
     <menu-entry @click.native="setPanel('history')">
@@ -156,7 +156,7 @@ export default {
     },
     async publishLesari() {
       try {
-        await store.dispatch(''); 
+        await store.dispatch('lesari/publish'); 
       } catch (e) {
         // Cancel
       }

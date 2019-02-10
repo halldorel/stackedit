@@ -21,7 +21,7 @@
       "web_url": "https://stackedit.io/app"
     }
   },
-  "offline_enabled": true,
+  "offline_enabled": false,
   "permissions": [
     "unlimitedStorage"
   ]
