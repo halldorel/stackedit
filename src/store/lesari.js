@@ -20,14 +20,14 @@ module.mutations = {
 
 module.actions = {
   ...module.actions,
-  publish(fileId) {
+  publish() {
   	const currentFile = store.getters['file/current'];
   	const template = {
     value: '{{{files.0.content.html}}}',
     helpers: '',};
   	console.log(currentFile);
   	exportSvc.applyTemplate(currentFile.id, template).then((html) => {
-	 return axios.post('/publishLesari', {
+	  return axios.post('/publishLesari', {
 	    	fileName: currentFile.name, 
 	    	fileContent: html,
 	    }).then((response) => {

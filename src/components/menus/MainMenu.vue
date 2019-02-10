@@ -53,7 +53,7 @@
     <menu-entry @click.native="publishLesari">
       <icon-upload slot="icon"></icon-upload>
       <div>Publish to Lesari</div>
-      <span>Publish to vefir.mms.is/lesari</span>
+      <span>Publish to vefir.mms.is/taknmal</span>
     </menu-entry>
     <menu-entry @click.native="setPanel('history')">
       <icon-history slot="icon"></icon-history>
@@ -95,6 +95,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { mapGetters, mapActions } from 'vuex';
 import MenuEntry from './common/MenuEntry';
 import providerRegistry from '../../services/providers/common/providerRegistry';
@@ -102,6 +103,7 @@ import UserImage from '../UserImage';
 import googleHelper from '../../services/providers/helpers/googleHelper';
 import syncSvc from '../../services/syncSvc';
 import userSvc from '../../services/userSvc';
+import exportSvc from '../../services/exportSvc';
 import store from '../../store';
 
 export default {
@@ -156,7 +158,21 @@ export default {
     },
     async publishLesari() {
       try {
-        await store.dispatch('lesari/publish'); 
+        const currentFile = store.getters['file/current'];
+        const template = {
+        value: '{{{files.0.content.html}}}',
+        helpers: '',};
+        console.log(currentFile);
+        exportSvc.applyTemplate(currentFile.id, template).then((html) => {
+        return axios.post('/publishLesari', {
+            fileName: currentFile.name, 
+            fileContent: html,
+          }).then((response) => {
+            console.log(response);
+          }).catch((error) => {
+            console.error(error);
+          });
+        });
       } catch (e) {
         // Cancel
       }
