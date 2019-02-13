@@ -110,14 +110,6 @@ var webpackConfig = merge(baseWebpackConfig, {
         sizes: [96, 128, 192, 256, 384, 512]
       }]
     }),
-    new OfflinePlugin({
-      ServiceWorker: {
-        events: true
-      },
-      AppCache: true,
-      excludes: ['**/.*', '**/*.map', '**/index.html', '**/static/oauth2/callback.html', '**/icons-*/*.png', '**/static/fonts/KaTeX_*'],
-      externals: ['/', '/app', '/oauth2/callback']
-    }),
   ]
 })
 

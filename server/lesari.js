@@ -7,7 +7,7 @@ const path = require('path');
 const filenamify = require('filenamify');
 const slugify = require('slugify');
 
-let DEPLOY_URL = "/Users/halldor/Documents/mms/stackedit/lesari/books";
+let DEPLOY_URL = "/Users/halldor/Documents/mms/stackedit/lesari/static/content";
 
 if (process.env.NODE_ENV === 'production') {
   DEPLOY_URL = "/srv/taknmal.mms.is/vefir-sshfs";

@@ -158,6 +158,7 @@ export default {
     },
     async publishLesari() {
       try {
+        console.log("starting publish");
         const currentFile = store.getters['file/current'];
         const template = {
         value: '{{{files.0.content.html}}}',
@@ -168,7 +169,12 @@ export default {
             fileName: currentFile.name, 
             fileContent: html,
           }).then((response) => {
-            console.log(response);
+            alert("Successfully published")
+            try {
+              store.dispatch('modal/open', 'fileProperties');
+            } catch(e) {
+              console.error(e);
+            }
           }).catch((error) => {
             console.error(error);
           });

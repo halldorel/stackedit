@@ -167,7 +167,7 @@ const store = new Vuex.Store({
     },
     isSponsor: ({ light, monetizeSponsor }, getters) => {
       const sponsorToken = getters['workspace/sponsorToken'];
-      return true;
+      return light || monetizeSponsor || (sponsorToken && sponsorToken.isSponsor);
     },
   },
   actions: {
