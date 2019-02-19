@@ -59,6 +59,7 @@ import GitlabOpenModal from './modals/providers/GitlabOpenModal';
 import GitlabPublishModal from './modals/providers/GitlabPublishModal';
 import GitlabSaveModal from './modals/providers/GitlabSaveModal';
 import GitlabWorkspaceModal from './modals/providers/GitlabWorkspaceModal';
+import S3UploadModal from './modals/providers/S3UploadModal';
 import WordpressPublishModal from './modals/providers/WordpressPublishModal';
 import BloggerPublishModal from './modals/providers/BloggerPublishModal';
 import BloggerPagePublishModal from './modals/providers/BloggerPagePublishModal';
@@ -108,6 +109,7 @@ export default {
     GitlabPublishModal,
     GitlabSaveModal,
     GitlabWorkspaceModal,
+    S3UploadModal,
     WordpressPublishModal,
     BloggerPublishModal,
     BloggerPagePublishModal,
