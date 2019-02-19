@@ -165,9 +165,11 @@ export default {
         helpers: '',};
         console.log(currentFile);
         exportSvc.applyTemplate(currentFile.id, template).then((html) => {
-        return axios.post('/publishLesari', {
-            fileName: currentFile.name, 
-            fileContent: html,
+        return axios('/publishLesari', {
+            method: "post",
+            data: { fileName: currentFile.name, 
+            fileContent: html, },
+            withCredentials: true,
           }).then((response) => {
             console.log(response);
             const fileNameNoExt = response.data.split('.')[0];
