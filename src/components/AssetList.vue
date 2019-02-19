@@ -1,7 +1,7 @@
 <template>
   <div class="asset__list">
     <div class="asset__select">
-      <select id="" v-for="folder in assetFolders">
+      <select id="folders" v-for="folder in assetFolders">
         
       </select>
     </div>
@@ -27,7 +27,7 @@ export default {
 
   },
   computed: {
-    ...mapGetters('assets', ['assetList']),
+    //...mapGetters('assets', ['assetList', 'assetFolders']),
   },
   methods: {
     addReference(assetReference) {

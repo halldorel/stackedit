@@ -35,6 +35,10 @@ export default {
     '<p>Thank you for your payment! Your sponsorship will be active in a minute.</p>',
     'Ok',
   ),
+  publishSuccess: simpleModal(
+    config => `<p>Successfully published! <a href="${config.bookUrl}">Link to published book.</a></p>`,
+    'Ok',
+  ),
   providerRedirection: simpleModal(
     config => `<p>You are about to navigate to the <b>${config.name}</b> authorization page.</p>`,
     'Cancel',

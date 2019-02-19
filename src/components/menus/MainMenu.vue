@@ -169,9 +169,13 @@ export default {
             fileName: currentFile.name, 
             fileContent: html,
           }).then((response) => {
-            alert("Successfully published")
+            console.log(response);
+            const fileNameNoExt = response.data.split('.')[0];
             try {
-              store.dispatch('modal/open', 'fileProperties');
+              store.dispatch('modal/open', {
+                type: 'publishSuccess',
+                bookUrl: 'https://vefir.mms.is/taknmal/#!/book/' + fileNameNoExt,
+              });
             } catch(e) {
               console.error(e);
             }
