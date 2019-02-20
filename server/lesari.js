@@ -6,6 +6,9 @@ const user = require('./user');
 const path = require('path');
 const filenamify = require('filenamify');
 const slugify = require('slugify');
+// Sanitize HTML is running with the default options
+// https://www.npmjs.com/package/sanitize-html#what-are-the-default-options
+const sanitizeHtml = require('sanitize-html');
 
 let DEPLOY_URL = "/Users/halldor/Documents/mms/stackedit/lesari/static/content";
 
@@ -42,7 +45,7 @@ exports.publishLesari = (req, res) => {
     let fileName = slugify(filenamify(req.body.fileName));
     fileName = fileName + ".html";
 
-    fs.writeFile(path.join(DEPLOY_URL, fileName), req.body.fileContent, function(err) {
+    fs.writeFile(path.join(DEPLOY_URL, fileName), sanitizeHtml(req.body.fileContent), function(err) {
       if(err) {
         reject(err);
       }
