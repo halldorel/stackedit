@@ -20,8 +20,8 @@ module.mutations = {
   ...module.mutations,
   setAssetList(state, value) {
     state.assetList = value;
-    state.assetFolders = _.map(state.assetList, asset => asset);
-    console.log(state.assetFolders);
+    state.assetFolders = _.union(_.map(state.assetList,
+    	asset => asset.folderName));
   },
 };
 

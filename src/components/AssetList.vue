@@ -1,12 +1,13 @@
 <template>
   <div class="asset__list">
     <div class="asset__select">
-      <select id="folders" v-for="folder in assetFolders">
-        
+      <select id="folders" v-model="selectedFolder">
+        <option value="" disabled>Velja möppu</option>
+        <option v-for="folder in assetFolders" :value="folder">{{ folder }}</option>
       </select>
     </div>
     <ul>
-      <li v-for="item in assetList">
+      <li v-for="item in filterByFolder(selectedFolder)">
         <span @click="(item) => playItem(item)" :data-key="item.Key">{{ item.fileName }}</span>
         <button class="asset__add" @click="(key) => { addReference( item ) }" v-title="'Add reference'">+</button>
       </li>
@@ -22,12 +23,16 @@ import editorSvc from '../services/editorSvc';
 
 export default {
   name: 'asset-list',
-  props: ['assetList', 'assetFolders'],
+  data: () => {
+    return {
+      selectedFolder: '',
+    }
+  },
   components: {
 
   },
   computed: {
-    //...mapGetters('assets', ['assetList', 'assetFolders']),
+    ...mapGetters('assets', ['assetList', 'assetFolders']),
   },
   methods: {
     addReference(assetReference) {
@@ -42,15 +47,28 @@ export default {
       const url = this.convertAssetUrl(event.target.getAttribute('data-key'));
       this.$root.$emit('play_video', url);
     },
+    folderSelected(event) {
+      const folder = event.target.value;
+      console.log("Filtering", folder);
+    },
+    filterByFolder(folder) {
+      return this.assetList.filter(asset => asset.folderName === this.selectedFolder);
+    },
     getAssets() {
       axios({ method: 'get', url: '/assets' })
-        .then((result) => {
-          const items = _.filter(_.map(result.data, (item) => {
-            item.fileName = _.last(item.Key.split('/'));
-            return item;
-          }), item => /^.*([^_360]|[^_540][^_720][^_1080]).m3u8$/.test(item.fileName));
-          this.$store.commit('assets/setAssetList', _.sortBy(items, item => item.fileName));
-        });
+      .then((result) => {
+        const items = _.filter(_.map(result.data, (item) => {
+          const itemNameParts = item.Key.split('/');
+          item.fileName = _.last(itemNameParts);
+          if(itemNameParts.length > 1) {
+            item.folderName = itemNameParts[1];
+          } else {
+            item.folderName = "folder name missing";
+          }
+          return item;
+        }), item => /^.*([^_360]|[^_540][^_720][^_1080]).m3u8$/.test(item.fileName));
+        this.$store.commit('assets/setAssetList', _.sortBy(items, item => item.fileName));
+      });
     },
   },
   mounted() {
@@ -64,6 +82,11 @@ export default {
   border-top: 1px solid #ccc;
   overflow-y: scroll;
   padding: 1em 0;
+}
+
+select {
+  padding: 0 1em;
+  width: auto;
 }
 
 ul,
