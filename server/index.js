@@ -18,6 +18,7 @@ module.exports = (app, serveV4) => {
       if (/\.(eot|ttf|woff2?|svg)$/.test(req.url)) {
         res.header('Access-Control-Allow-Origin', '*');
       }
+      res.header('Cache-control', 'no-cache');
       next();
     });
 
@@ -77,7 +78,7 @@ module.exports = (app, serveV4) => {
 
     // Serve the static folder with 1 year max-age
     app.use('/static', serveStatic(resolvePath('dist/static'), {
-      maxAge: '1y',
+      maxAge: '1h',
     }));
 
     app.use(serveStatic(resolvePath('dist')));
