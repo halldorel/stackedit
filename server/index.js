@@ -40,15 +40,6 @@ module.exports = (app, serveV4) => {
   app.get('/assets', assets.listAssets);
   app.post('/publishLesari', lesari.publishLesari);
 
-  if (serveV4) {
-    /* eslint-disable global-require, import/no-unresolved */
-    app.post('/sshPublish', require('../stackedit_v4/app/ssh').publish);
-    app.post('/picasaImportImg', require('../stackedit_v4/app/picasa').importImg);
-    app.get('/downloadImport', require('../stackedit_v4/app/download').importPublic);
-    /* eslint-enable global-require, import/no-unresolved */
-  }
-
-
   // Serve landing.html
   app.get('/', (req, res) => res.sendFile(resolvePath('static/landing/index.html')));
   // Serve sitemap.xml
@@ -61,12 +52,6 @@ module.exports = (app, serveV4) => {
 
   // Serve static resources
   if (process.env.NODE_ENV === 'production') {
-    if (serveV4) {
-      // Serve editor.html in /viewer
-      app.get('/editor', (req, res) => res.sendFile(resolvePath('stackedit_v4/views/editor.html')));
-      // Serve viewer.html in /viewer
-      app.get('/viewer', (req, res) => res.sendFile(resolvePath('stackedit_v4/views/viewer.html')));
-    }
 
     // Serve index.html in /app
     app.get('/app', (req, res) => res.sendFile(resolvePath('dist/index.html')));
@@ -83,11 +68,5 @@ module.exports = (app, serveV4) => {
 
     app.use(serveStatic(resolvePath('dist')));
 
-    if (serveV4) {
-      app.use(serveStatic(path.dirname(resolvePath('stackedit_v4/public/cache.manifest'))));
-
-      // Error 404
-      app.use((req, res) => res.status(404).sendFile(resolvePath('stackedit_v4/views/error_404.html')));
-    }
   }
 };
