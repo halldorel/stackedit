@@ -378,7 +378,7 @@ const editorSvc = Object.assign(new Vue(), editorSvcDiscussions, editorSvcUtils,
     });
     this.pagedownEditor.hooks.set('insertImageDialog', (callback) => {
       store.dispatch('modal/open', {
-        type: 'image',
+        type: 'imageUpload',
         callback,
       });
       return true;

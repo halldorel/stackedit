@@ -1,7 +1,10 @@
+require('dotenv').config()
+
 const compression = require('compression');
 const serveStatic = require('serve-static');
 const bodyParser = require('body-parser');
 const path = require('path');
+const multer = require('multer');
 const user = require('./user');
 const github = require('./github');
 const pdf = require('./pdf');
@@ -10,6 +13,10 @@ const assets = require('./assets');
 const lesari = require('./lesari');
 
 const resolvePath = pathToResolve => path.join(__dirname, '..', pathToResolve);
+
+const uploadMiddleware = multer({
+  storage: multer.memoryStorage({}),
+}).any();
 
 module.exports = (app, serveV4) => {
   if (process.env.NODE_ENV === 'production') {
@@ -36,8 +43,12 @@ module.exports = (app, serveV4) => {
   app.post('/paypalIpn', bodyParser.urlencoded({
     extended: false,
   }), user.paypalIpn);
-    // List external assets
+
   app.get('/assets', assets.listAssets);
+
+  app.post('/pictures', uploadMiddleware, assets.uploadPictures);
+  app.get('/pictures', assets.listPictures);
+  
   app.post('/publishLesari', lesari.publishLesari);
 
   // Serve landing.html
