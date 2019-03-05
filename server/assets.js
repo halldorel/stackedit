@@ -4,6 +4,7 @@ const _ = require('lodash');
 const config = require('../config');
 const sharp = require('sharp');
 const filenamify = require('filenamify');
+const slugify = require('slugify');
 
 AWS.config.update({
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -56,21 +57,11 @@ exports.listPictures = (req, res) => {
 }
 
 exports.uploadPictures = (req, res) => {
-/* { fieldname: 'image',
-       originalname: '34484449_10155653912391134_7547473384183955456_o.jpg',
-       encoding: '7bit',
-       mimetype: 'image/jpeg',
-       buffer:
-        <Buffer ff d8 ff e2 0b f8 49 43 43 5f 50 52 4f 46 49 4c 45 00 01 01 00 00 0b e8 00 00 00 00 02 00 00 00 6d 6e 74 72 52 47 42 20 58 59 5a 20 07 d9 00 03 00 1b ... >,
-       size: 375921 }
-       */
-  // TODO: Resizing https://github.com/lovell/sharp
-  const folderName = filenamify(req.body.folderName);
+  // To keep it clean, do the same slugify / filenamify as in server/lesari.js
+  const folderName = slugify(filenamify(req.body.fileName));
 
   const createSize = (file) => new Promise((resolve, reject) => {
-    // Returns a promise
-    console.log("Inside resize", file);
-    sharp(file.buffer).resize(file.w, file.w, {
+    return sharp(file.buffer).resize(file.w, file.w, {
       fit: sharp.fit.inside,
       withoutEnlargement: true,
     })
@@ -80,8 +71,7 @@ exports.uploadPictures = (req, res) => {
       console.log("resizedBuffer", resizedBuffer);
       file.resizedBuffer = resizedBuffer;
       resolve(file);
-    })
-    .catch(err => { console.error(err); reject(err); });
+    });
   });
 
   const resize = (file) => {
@@ -96,8 +86,6 @@ exports.uploadPictures = (req, res) => {
       outputSize.originalName = originalName;
       return outputSize;
     });
-
-    //Promise.all(files).then(resized => resolve(resized)).catch(err => reject(err));
   };
 
   const upload = (file) => new Promise((resolve, reject) => {
@@ -106,30 +94,26 @@ exports.uploadPictures = (req, res) => {
       Bucket: bucketPictures,
       Key: fileName,
       Body: file.resizedBuffer, };
-
-    console.log("file: ", file);
-    console.log("params: ", params);
-
     return s3.upload(params, (err, data) => {
       if(err) {
-        console.error(err);
         return reject(err);
       }
       resolve(data);
     });
   });
 
-  Promise.all(req.files.map(resize)).then( files => {
-    const resizedFlat = _.flatten(files);
-    Promise.all(resizedFlat.map(createSize)).then( resizedFiles => {
-      console.log(resizedFiles);
-      Promise.all(resizedFlat.map(upload)).then( uploadResults => {
-        res.status(201).json({ message: uploadResults });
-      }).catch(err => res.status(500).json({ err: err }));
-    }).catch(err => res.status(500).json({ err: err }));
-  }).catch(err => res.status(500).json({ err: err }));
 
-  // Promise.all(req.files.map(resizeAndUpload)).then(uploadResultArray => {
-  //   res.status(201).json({ uploadedFiles: uploadResultArray });
-  // }).catch(err => res.status(500).json({ error: "Upload failed" }));
+
+  Promise.all(req.files.map(resize)).then( files => {
+    if(files.length === 0) {
+      return res.status(401).json({ message: "No files to upload", })
+    }
+    const resizedFlat = _.flatten(files);
+    return Promise.all(resizedFlat.map(createSize)).then( resizedFiles => {
+      return Promise.all(resizedFlat.map(upload)).then( uploadResults => {
+        console.log(uploadResults);
+        res.status(201).json({ message: uploadResults });
+      });
+    });
+  }).catch(err => res.status(500).json({ err: err }));
 }

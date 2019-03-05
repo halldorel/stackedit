@@ -291,6 +291,24 @@ const editorSvc = Object.assign(new Vue(), editorSvcDiscussions, editorSvcUtils,
     });
   }, 100),
 
+  /** 
+   * Add uploaded image url
+   */
+
+  addUploadedImageUrl: (event) => {
+    console.log(event);
+
+    if(event.dataTransfer.files.length > 0) {
+      store.dispatch('assets/uploadImage', event.dataTransfer.files[0]).then((uploaded) => {
+        if(uploaded.data.message.length > 0) {
+          editorSvc.pagedownEditor.uiManager.doUploadedImageUrl(uploaded.data.message[0].Location);
+        }
+      });
+    } else {
+      alert("Image file is not available for upload.");
+    }
+  },
+
   /**
    * Report selection from the preview to the editor.
    */
@@ -386,6 +404,8 @@ const editorSvc = Object.assign(new Vue(), editorSvcDiscussions, editorSvcUtils,
 
     this.editorElt.parentNode.addEventListener('scroll', () => this.saveContentState(true));
     this.previewElt.parentNode.addEventListener('scroll', () => this.saveContentState(true));
+
+    this.editorElt.parentNode.addEventListener('drop', this.addUploadedImageUrl);
 
     const refreshPreview = allowDebounce(() => {
       this.convert();

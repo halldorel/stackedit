@@ -35,7 +35,7 @@ module.actions = {
 	    }).catch((error) => {
 	    	console.error(error);
 	    });
-  	})
+  	});
   },
 };
 

@@ -408,6 +408,19 @@ function UIManager(input, commandManager) {
     state.restore();
   }
 
+  function doUploadedImageUrl(url) {
+    var state = new TextareaState(input);
+    if (!state) {
+      return;
+    }
+
+    inputBox.focus();
+    var chunks = state.getChunks()
+    let chunk = commandManager.addUploadedImageUrl(chunks, url);
+    state.setChunks(chunk);
+    state.restore();
+  }
+
   function doClick(buttonName) {
     var button = buttons[buttonName];
     if (!button) {
@@ -500,6 +513,7 @@ function UIManager(input, commandManager) {
 
   this.doClick = doClick;
   this.doAssetReference = doAssetReference;
+  this.doUploadedImageUrl = doUploadedImageUrl;
 }
 
 function CommandManager(pluginHooks, getString) {
@@ -1387,7 +1401,18 @@ commandProto.addAssetReference = function (chunk, asset) {
 
   chunk.before = chunk.before + "{data-video=\"" + asset + "\"}";
   chunk.selection = "";
-  chunk.skipLines(1, 1, true);
+  chunk.skipLines(0, 1, true);
+  return chunk;
+}
+
+commandProto.addUploadedImageUrl = function (chunk, url) {
+  if (chunk.before.slice(-1) !== '\n') {
+    chunk.before += '\n';
+  }
+
+  chunk.before = chunk.before + "![](\"" + url + "\")";
+  chunk.selection = "";
+  chunk.skipLines(0, 1, true);
   return chunk;
 }
 

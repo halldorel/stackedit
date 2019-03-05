@@ -1,6 +1,9 @@
+import axios from 'axios';
+import _ from 'lodash';
+
 import moduleTemplate from './moduleTemplate';
 import empty from '../data/empties/emptyFile';
-import _ from 'lodash';
+import store from '../store';
 
 const module = moduleTemplate(empty);
 
@@ -27,6 +30,24 @@ module.mutations = {
 
 module.actions = {
   ...module.actions,
+  uploadImage(state, imageFile) {
+    const currentFile = store.getters['file/current'];
+    let formData = new FormData();
+    formData.set('fileName', currentFile.name);
+    formData.append('image', imageFile);
+
+    return axios({
+      method: 'POST',
+      url: '/pictures',
+      data: formData,
+      config: {
+        headers: {'Content-Type': 'application/x-www-form-urlencoded',
+        'mimeType': 'multipart/form-data' },
+      },
+    }).catch((error) => {
+      console.error(error);
+    });
+  },
 };
 
 export default module;
