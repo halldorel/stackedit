@@ -42,7 +42,7 @@ exports.publishLesari = (req, res) => {
       reject("Filename is too long");
     }
 
-    let fileName = slugify(filenamify(req.body.fileName));
+    let fileName = slugify(filenamify(req.body.fileName.toLowerCase()));
     fileName = fileName + ".html";
 
     fs.writeFile(path.join(DEPLOY_URL, fileName), sanitizeHtml(req.body.fileContent), function(err) {

@@ -58,7 +58,7 @@ exports.listPictures = (req, res) => {
 
 exports.uploadPictures = (req, res) => {
   // To keep it clean, do the same slugify / filenamify as in server/lesari.js
-  const folderName = slugify(filenamify(req.body.fileName));
+  const folderName = slugify(filenamify(req.body.fileName.toLowerCase()));
 
   const createSize = (file) => new Promise((resolve, reject) => {
     return sharp(file.buffer).resize(file.w, file.w, {
@@ -88,12 +88,18 @@ exports.uploadPictures = (req, res) => {
     });
   };
 
+  const removeExtension = (fileName) => {
+    const parts = fileName.split('.').slice(0, -1);
+    return parts.join('');
+  };
+
   const upload = (file) => new Promise((resolve, reject) => {
-    const fileName = folderName + "/" + file.name + "/" + new Date().getTime() + "_" + file.originalName;
+    const fileName = folderName + "/" + file.name + "/" + new Date().getTime() + "_" + removeExtension(file.originalName) + ".jpg";
     const params = {
       Bucket: bucketPictures,
       Key: fileName,
-      Body: file.resizedBuffer, };
+      Body: file.resizedBuffer,
+      ContentType: 'image/jpeg'};
     return s3.upload(params, (err, data) => {
       if(err) {
         return reject(err);
