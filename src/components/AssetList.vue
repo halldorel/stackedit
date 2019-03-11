@@ -39,7 +39,7 @@ export default {
       editorSvc.pagedownEditor.uiManager.doAssetReference(this.convertAssetUrl(assetReference.Key));
     },
     convertAssetUrl(input) {
-      const urlPrefix = 'https://menntamalastofnun-vod.s3.amazonaws.com/';
+      const urlPrefix = 'https://d2gc4f1a062n80.cloudfront.net/';
       const escapedSpaces = input.split(' ').join('+');
       return urlPrefix + escapedSpaces;
     },
@@ -49,7 +49,6 @@ export default {
     },
     folderSelected(event) {
       const folder = event.target.value;
-      console.log("Filtering", folder);
     },
     filterByFolder(folder) {
       return this.assetList.filter(asset => asset.folderName === this.selectedFolder);
@@ -85,8 +84,8 @@ export default {
 }
 
 select {
-  padding: 0 1em;
-  width: auto;
+  margin: 0 1em;
+  width: calc(100% - 2em);
 }
 
 ul,
