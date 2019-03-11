@@ -1410,9 +1410,8 @@ commandProto.addUploadedImageUrl = function (chunk, url) {
     chunk.before += '\n';
   }
 
-  chunk.before = chunk.before + "![](\"" + url + "\")";
+  chunk.before = chunk.before + "![](" + url + ")";
   chunk.selection = "";
-  chunk.skipLines(0, 1, true);
   return chunk;
 }
 

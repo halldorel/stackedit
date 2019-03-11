@@ -301,11 +301,12 @@ const editorSvc = Object.assign(new Vue(), editorSvcDiscussions, editorSvcUtils,
     if(event.dataTransfer.files.length > 0) {
       store.dispatch('assets/uploadImage', event.dataTransfer.files[0]).then((uploaded) => {
         if(uploaded.data.message.length > 0) {
-          editorSvc.pagedownEditor.uiManager.doUploadedImageUrl(uploaded.data.message[0].Location);
+          const cloudfrontUrl = 'https://' + 'd3mxr6ws60f763.cloudfront.net' + '/' + uploaded.data.message[0].key;
+          editorSvc.pagedownEditor.uiManager.doUploadedImageUrl(cloudfrontUrl);
         }
       });
     } else {
-      alert("Image file is not available for upload.");
+      alert('Image file is not available for upload.');
     }
   },
 

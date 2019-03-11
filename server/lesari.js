@@ -13,7 +13,7 @@ const sanitizeHtml = require('sanitize-html');
 let DEPLOY_URL = "/Users/halldor/Documents/mms/stackedit/lesari/static/content";
 
 if (process.env.NODE_ENV === 'production') {
-  DEPLOY_URL = "/srv/taknmal.mms.is/vefir-sshfs";
+  DEPLOY_URL = "/var/www/lesari-web/content";
 }
 
 const readJson = (str) => {
@@ -26,7 +26,6 @@ const readJson = (str) => {
 
 exports.publishLesari = (req, res) => {
   return new Promise((resolve, reject) => {
-    console.log(req.body);
     if(req.body.fileContent) {
       console.log(`Got file content of length ${req.body.fileContent.length}`);
       if(req.body.fileContent.length > 4000000) {

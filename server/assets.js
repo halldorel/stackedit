@@ -108,8 +108,6 @@ exports.uploadPictures = (req, res) => {
     });
   });
 
-
-
   Promise.all(req.files.map(resize)).then( files => {
     if(files.length === 0) {
       return res.status(401).json({ message: "No files to upload", })

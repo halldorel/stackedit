@@ -1,4 +1,4 @@
-require('dotenv').config()
+require('dotenv').config();
 
 const compression = require('compression');
 const serveStatic = require('serve-static');
@@ -52,7 +52,9 @@ module.exports = (app, serveV4) => {
   app.post('/publishLesari', lesari.publishLesari);
 
   // Serve landing.html
-  app.get('/', (req, res) => res.sendFile(resolvePath('static/landing/index.html')));
+  app.get('/', (req, res) => {
+    res.redirect('/app');
+  });
   // Serve sitemap.xml
   app.get('/sitemap.xml', (req, res) => res.sendFile(resolvePath('static/sitemap.xml')));
   // Serve callback.html
