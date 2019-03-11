@@ -53,7 +53,7 @@
     <menu-entry @click.native="publishLesari">
       <icon-upload slot="icon"></icon-upload>
       <div>Publish to Lesari</div>
-      <span>Publish to vefir.mms.is/taknmal</span>
+      <span>Publish to https://lesari.staf.li</span>
     </menu-entry>
     <menu-entry @click.native="setPanel('history')">
       <icon-history slot="icon"></icon-history>
@@ -176,7 +176,7 @@ export default {
             try {
               store.dispatch('modal/open', {
                 type: 'publishSuccess',
-                bookUrl: 'https://vefir.mms.is/taknmal/#!/book/' + fileNameNoExt,
+                bookUrl: 'https://lesari.staf.li/#!/book/' + fileNameNoExt,
               });
             } catch(e) {
               console.error(e);
