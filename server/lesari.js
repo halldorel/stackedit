@@ -47,7 +47,7 @@ exports.publishLesari = (req, res) => {
     const filePath = path.join(DEPLOY_URL, fileName)
 
     fs.writeFile(filePath, sanitizeHtml(req.body.fileContent, {
-      allowedTags: sanitizeHtml.defaults.allowedTags.concat( ['h1', 'h2'] ),
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat( ['h1', 'h2', 'img'] ),
       allowedAttributes: {
         '*': [ 'id' ],
         a: [ 'href', 'name' ],
