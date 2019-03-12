@@ -41,17 +41,28 @@ exports.publishLesari = (req, res) => {
       reject("Filename is too long");
     }
 
-    let fileName = slugify(filenamify(req.body.fileName.toLowerCase()));
+    let fileName = slugify(filenamify(req.body.fileName));
     fileName = fileName + ".html";
+    fileName = fileName.toLowerCase();
+    const filePath = path.join(DEPLOY_URL, fileName)
 
-    fs.writeFile(path.join(DEPLOY_URL, fileName), sanitizeHtml(req.body.fileContent), function(err) {
+    fs.writeFile(filePath, sanitizeHtml(req.body.fileContent, {
+      allowedTags: sanitizeHtml.defaults.allowedTags.concat( ['h1', 'h2'] ),
+      allowedAttributes: {
+        '*': [ 'id' ],
+        a: [ 'href', 'name' ],
+        img: [ 'src', 'alt' ],
+        p: [ 'data-video' ],
+      },
+      allowedSchemes: [ 'https' ],
+
+    }), function(err) {
       if(err) {
-        reject(err);
+        return reject(err);
       }
       resolve(fileName);
     });   
   }).then((fileName) => {
-    console.log(fileName);
     res.statusCode = 201;
     res.send(fileName);
     res.end();
