@@ -131,33 +131,27 @@ export default {
 
 .preview__inner-1 {
   overflow: auto;
+  height: 70vh;
 }
 
 .preview__inner-2 {
   margin: 0;
-  height: 80vh;
 }
 
 .preview__video {
   position: absolute;
   bottom: 10px;
   right: 10px;
-}
-
-.vjs_tech {
-  max-width: 320px !important;
-  max-height: 160px !important;
+  left: 10px;
+  height: 20vh;
+  width: auto;
+  box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.5);
 }
 
 .preview__video video {
   width: 100%;
   height: 100%;
-}
-
-.video-player {
-  width: 50vh;
-  max-width: 400px;
-  box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.2);
 }
 
 .preview__inner-2 > :first-child > :first-child {

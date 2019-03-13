@@ -1395,13 +1395,11 @@ commandProto.doHorizontalRule = function (chunk) {
 };
 
 commandProto.addAssetReference = function (chunk, asset) {
-  if (chunk.before.slice(-1) !== '\n') {
-    chunk.before += '\n';
+  if(chunk.after.slice(0) === '\n') {
+    chunk.after = chunk.after.slice(1);
   }
+  chunk.after = "{data-video=\"" + asset + "\"}\n\n" + chunk.after;
 
-  chunk.before = chunk.before + "{data-video=\"" + asset + "\"}";
-  chunk.selection = "";
-  chunk.skipLines(0, 1, true);
   return chunk;
 }
 
@@ -1411,7 +1409,7 @@ commandProto.addUploadedImageUrl = function (chunk, url) {
   }
 
   chunk.before = chunk.before + "![](" + url + ")";
-  chunk.selection = "";
+  //chunk.selection = "";
   return chunk;
 }
 

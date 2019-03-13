@@ -94,7 +94,12 @@ exports.uploadPictures = (req, res) => {
   };
 
   const upload = (file) => new Promise((resolve, reject) => {
-    const fileName = folderName + "/" + file.name + "/" + new Date().getTime() + "_" + removeExtension(file.originalName) + ".jpg";
+    const fileName = folderName +
+    "/" + file.name +
+    "/" + new Date().getTime() + "_" + 
+    slugify(filenamify(removeExtension(file.originalName))) +
+    ".jpg";
+
     const params = {
       Bucket: bucketPictures,
       Key: fileName,
