@@ -3,6 +3,7 @@ const { spawn } = require('child_process');
 const fs = require('fs');
 const tmp = require('tmp');
 const user = require('./user');
+const conf = require('./conf');
 
 const outputFormats = {
   asciidoc: 'text/plain',
@@ -41,12 +42,9 @@ exports.generate = (req, res) => {
   const outputFormat = Object.prototype.hasOwnProperty.call(outputFormats, req.query.format)
     ? req.query.format
     : 'pdf';
-  Promise.all([
-    user.checkSponsor(req.query.idToken),
-    user.checkMonetize(req.query.token),
-  ])
-    .then(([isSponsor, isMonetize]) => {
-      if (!isSponsor && !isMonetize) {
+  user.checkSponsor(req.query.idToken)
+    .then((isSponsor) => {
+      if (!isSponsor) {
         throw new Error('unauthorized');
       }
 
@@ -79,7 +77,7 @@ exports.generate = (req, res) => {
       if (!Number.isNaN(options.tocDepth)) {
         params.push('--toc-depth', options.tocDepth);
       }
-      options.highlightStyle = highlightStyles.indexOf(options.highlightStyle) !== -1 ? options.highlightStyle : 'kate';
+      options.highlightStyle = highlightStyles.includes(options.highlightStyle) ? options.highlightStyle : 'kate';
       params.push('--highlight-style', options.highlightStyle);
       Object.keys(metadata).forEach((key) => {
         params.push('-M', `${key}=${metadata[key]}`);
@@ -93,10 +91,9 @@ exports.generate = (req, res) => {
         reject(error);
       }
 
-      const binPath = process.env.PANDOC_PATH || 'pandoc';
       const format = outputFormat === 'pdf' ? 'latex' : outputFormat;
       params.push('-f', 'json', '-t', format, '-o', filePath);
-      const pandoc = spawn(binPath, params, {
+      const pandoc = spawn(conf.values.pandocPath, params, {
         stdio: [
           'pipe',
           'ignore',

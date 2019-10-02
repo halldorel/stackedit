@@ -2,8 +2,8 @@ import utils from '../../utils';
 import networkSvc from '../../networkSvc';
 import store from '../../../store';
 import userSvc from '../../userSvc';
+import badgeSvc from '../../badgeSvc';
 
-const clientId = GITHUB_CLIENT_ID;
 const getScopes = token => [token.repoFullAccess ? 'repo' : 'public_repo', 'gist'];
 
 const request = (token, options) => networkSvc.request({
@@ -63,6 +63,9 @@ export default {
    * https://developer.github.com/apps/building-oauth-apps/authorization-options-for-oauth-apps/
    */
   async startOauth2(scopes, sub = null, silent = false) {
+    const clientId = store.getters['data/serverConf'].githubClientId;
+
+    // Get an OAuth2 code
     const { code } = await networkSvc.startOauth2(
       'https://github.com/login/oauth/authorize',
       {
@@ -90,7 +93,7 @@ export default {
         access_token: accessToken,
       },
     })).body;
-    userSvc.addInfo({
+    userSvc.addUserInfo({
       id: `${subPrefix}:${user.id}`,
       name: user.login,
       imageUrl: user.avatar_url || '',
@@ -107,7 +110,7 @@ export default {
       accessToken,
       name: user.login,
       sub: `${user.id}`,
-      repoFullAccess: scopes.indexOf('repo') !== -1,
+      repoFullAccess: scopes.includes('repo'),
     };
 
     // Add token to github tokens
@@ -115,7 +118,9 @@ export default {
     return token;
   },
   async addAccount(repoFullAccess = false) {
-    return this.startOauth2(getScopes({ repoFullAccess }));
+    const token = await this.startOauth2(getScopes({ repoFullAccess }));
+    badgeSvc.addBadge('addGitHubAccount');
+    return token;
   },
 
   /**

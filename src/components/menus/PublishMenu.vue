@@ -1,27 +1,27 @@
 <template>
   <div class="side-bar__panel side-bar__panel--menu">
     <div class="side-bar__info" v-if="isCurrentTemp">
-      <p><b>{{currentFileName}}</b> can not be published as it's a temporary file.</p>
+      <p>{{currentFileName}} can't be published as it's a temporary file.</p>
     </div>
     <div v-else>
-      <div class="side-bar__info" v-if="noToken">
-        <p>You have to <b>link an account</b> to start publishing files.</p>
-      </div>
       <div class="side-bar__info" v-if="publishLocations.length">
-        <p><b>{{currentFileName}}</b> is already published.</p>
+        <p>{{currentFileName}} is already published.</p>
         <menu-entry @click.native="requestPublish">
           <icon-upload slot="icon"></icon-upload>
           <div>Publish now</div>
-          <span>Update current file publications.</span>
+          <span>Update publications for {{currentFileName}}.</span>
         </menu-entry>
         <menu-entry @click.native="managePublish">
           <icon-view-list slot="icon"></icon-view-list>
           <div><div class="menu-entry__label menu-entry__label--count">{{locationCount}}</div> File publication</div>
-          <span>Manage current file publication locations.</span>
+          <span>Manage publication locations for {{currentFileName}}.</span>
         </menu-entry>
       </div>
+      <div class="side-bar__info" v-else-if="noToken">
+        <p>You have to link an account to start publishing files.</p>
+      </div>
       <hr>
-      <div v-for="token in bloggerTokens" :key="token.sub">
+      <div v-for="token in bloggerTokens" :key="'blogger-' + token.sub">
         <menu-entry @click.native="publishBlogger(token)">
           <icon-provider slot="icon" provider-id="blogger"></icon-provider>
           <div>Publish to Blogger</div>
@@ -129,13 +129,13 @@ const tokensToArray = (tokens, filter = () => true) => Object.values(tokens)
   .filter(token => filter(token))
   .sort((token1, token2) => token1.name.localeCompare(token2.name));
 
-const publishModalOpener = type => async (token) => {
+const publishModalOpener = (type, featureId) => async (token) => {
   try {
     const publishLocation = await store.dispatch('modal/open', {
       type,
       token,
     });
-    publishSvc.createPublishLocation(publishLocation);
+    publishSvc.createPublishLocation(publishLocation, featureId);
   } catch (e) { /* cancel */ }
 };
 
@@ -157,7 +157,7 @@ export default {
       return Object.keys(this.publishLocations).length;
     },
     currentFileName() {
-      return store.getters['file/current'].name;
+      return `"${store.getters['file/current'].name}"`;
     },
     bloggerTokens() {
       return tokensToArray(store.getters['data/googleTokensBySub'], token => token.isBlogger);
@@ -181,8 +181,13 @@ export default {
       return tokensToArray(store.getters['data/zendeskTokensBySub']);
     },
     noToken() {
-      return Object.values(store.getters['data/tokensByType'])
-        .every(tokens => !Object.keys(tokens).length);
+      return !this.bloggerTokens.length
+        && !this.dropboxTokens.length
+        && !this.githubTokens.length
+        && !this.gitlabTokens.length
+        && !this.googleDriveTokens.length
+        && !this.wordpressTokens.length
+        && !this.zendeskTokens.length;
     },
   },
   methods: {
@@ -236,15 +241,15 @@ export default {
         await zendeskHelper.addAccount(subdomain, clientId);
       } catch (e) { /* cancel */ }
     },
-    publishBlogger: publishModalOpener('bloggerPublish'),
-    publishBloggerPage: publishModalOpener('bloggerPagePublish'),
-    publishDropbox: publishModalOpener('dropboxPublish'),
-    publishGithub: publishModalOpener('githubPublish'),
-    publishGist: publishModalOpener('gistPublish'),
-    publishGitlab: publishModalOpener('gitlabPublish'),
-    publishGoogleDrive: publishModalOpener('googleDrivePublish'),
-    publishWordpress: publishModalOpener('wordpressPublish'),
-    publishZendesk: publishModalOpener('zendeskPublish'),
+    publishBlogger: publishModalOpener('bloggerPublish', 'publishToBlogger'),
+    publishBloggerPage: publishModalOpener('bloggerPagePublish', 'publishToBloggerPage'),
+    publishDropbox: publishModalOpener('dropboxPublish', 'publishToDropbox'),
+    publishGithub: publishModalOpener('githubPublish', 'publishToGithub'),
+    publishGist: publishModalOpener('gistPublish', 'publishToGist'),
+    publishGitlab: publishModalOpener('gitlabPublish', 'publishToGitlab'),
+    publishGoogleDrive: publishModalOpener('googleDrivePublish', 'publishToGoogleDrive'),
+    publishWordpress: publishModalOpener('wordpressPublish', 'publishToWordPress'),
+    publishZendesk: publishModalOpener('zendeskPublish', 'publishToZendesk'),
   },
 };
 </script>

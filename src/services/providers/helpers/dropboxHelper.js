@@ -1,12 +1,13 @@
 import networkSvc from '../../networkSvc';
 import userSvc from '../../userSvc';
 import store from '../../../store';
+import badgeSvc from '../../badgeSvc';
 
 const getAppKey = (fullAccess) => {
   if (fullAccess) {
-    return 'lq6mwopab8wskas';
+    return store.getters['data/serverConf'].dropboxAppKeyFull;
   }
-  return 'sw0hlixhr8q1xk0';
+  return store.getters['data/serverConf'].dropboxAppKey;
 };
 
 const httpHeaderSafeJson = args => args && JSON.stringify(args)
@@ -59,6 +60,7 @@ export default {
    * https://www.dropbox.com/developers/documentation/http/documentation#users-get_current_account
    */
   async startOauth2(fullAccess, sub = null, silent = false) {
+    // Get an OAuth2 code
     const { accessToken } = await networkSvc.startOauth2(
       'https://www.dropbox.com/oauth2/authorize',
       {
@@ -73,7 +75,7 @@ export default {
       method: 'POST',
       url: 'https://api.dropboxapi.com/2/users/get_current_account',
     });
-    userSvc.addInfo({
+    userSvc.addUserInfo({
       id: `${subPrefix}:${body.account_id}`,
       name: body.name.display_name,
       imageUrl: body.profile_photo_url || '',
@@ -96,8 +98,10 @@ export default {
     store.dispatch('data/addDropboxToken', token);
     return token;
   },
-  addAccount(fullAccess = false) {
-    return this.startOauth2(fullAccess);
+  async addAccount(fullAccess = false) {
+    const token = await this.startOauth2(fullAccess);
+    badgeSvc.addBadge('addDropboxAccount');
+    return token;
   },
 
   /**
@@ -143,13 +147,20 @@ export default {
   /**
    * https://www.dropbox.com/developers/documentation/http/documentation#list-revisions
    */
-  async listRevisions(token, fileId) {
+  async listRevisions({
+    token,
+    path,
+    fileId,
+  }) {
     const res = await request(token, {
       method: 'POST',
       url: 'https://api.dropboxapi.com/2/files/list_revisions',
-      body: {
+      body: fileId ? {
         path: fileId,
         mode: 'id',
+        limit: 100,
+      } : {
+        path,
         limit: 100,
       },
     });
