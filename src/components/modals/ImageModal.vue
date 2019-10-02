@@ -3,7 +3,7 @@
     <div class="modal__content">
       <p>Please provide a <b>URL</b> for your image.</p>
       <form-entry label="URL" error="url">
-        <input slot="field" class="textfield" type="text" v-model.trim="url" @keydown.enter="resolve()">
+        <input slot="field" class="textfield" type="text" v-model.trim="url" @keydown.enter="resolve">
       </form-entry>
       <menu-entry @click.native="openGooglePhotos(token)" v-for="token in googlePhotosTokens" :key="token.sub">
         <icon-provider slot="icon" provider-id="googlePhotos"></icon-provider>
@@ -17,7 +17,7 @@
     </div>
     <div class="modal__button-bar">
       <button class="button" @click="reject()">Cancel</button>
-      <button class="button button--resolve" @click="resolve()">Ok</button>
+      <button class="button button--resolve" @click="resolve">Ok</button>
     </div>
   </modal-inner>
 </template>
@@ -44,7 +44,8 @@ export default modalTemplate({
     },
   },
   methods: {
-    resolve() {
+    resolve(evt) {
+      evt.preventDefault(); // Fixes https://github.com/benweet/stackedit/issues/1503
       if (!this.url) {
         this.setError('url');
       } else {
@@ -58,8 +59,10 @@ export default modalTemplate({
       this.config.reject();
       callback(null);
     },
-    addGooglePhotosAccount() {
-      return googleHelper.addPhotosAccount();
+    async addGooglePhotosAccount() {
+      try {
+        await googleHelper.addPhotosAccount();
+      } catch (e) { /* cancel */ }
     },
     async openGooglePhotos(token) {
       const { callback } = this.config;

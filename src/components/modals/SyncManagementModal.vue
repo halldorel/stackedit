@@ -50,6 +50,7 @@
 import { mapGetters, mapActions } from 'vuex';
 import ModalInner from './common/ModalInner';
 import store from '../../store';
+import badgeSvc from '../../services/badgeSvc';
 
 export default {
   components: {
@@ -75,6 +76,7 @@ export default {
         this.info('This location can not be removed.');
       } else {
         store.commit('syncLocation/deleteItem', location.id);
+        badgeSvc.addBadge('removeSyncLocation');
       }
     },
   },
@@ -99,9 +101,7 @@ $small-button-size: 22px;
 }
 
 .sync-entry__row {
-  margin-top: 1px;
-  padding-top: 1px;
-  border-top: 1px solid rgba(128, 128, 128, 0.15);
+  border-top: 1px solid $hr-color;
   line-height: $small-button-size;
 }
 

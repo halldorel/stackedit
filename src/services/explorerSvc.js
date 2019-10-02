@@ -1,5 +1,6 @@
 import store from '../store';
 import workspaceSvc from './workspaceSvc';
+import badgeSvc from './badgeSvc';
 
 export default {
   newItem(isFolder = false) {
@@ -76,8 +77,10 @@ export default {
           store.commit('folder/deleteItem', folderNode.item.id);
         };
         recursiveDelete(selectedNode);
+        badgeSvc.addBadge('removeFolder');
       } else {
         deleteFile(selectedNode.item.id);
+        badgeSvc.addBadge('removeFile');
       }
       if (doClose) {
         // Close the current file by opening the last opened, not deleted one

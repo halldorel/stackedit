@@ -2,7 +2,7 @@
   <div class="side-bar flex flex--column">
     <div class="side-title flex flex--row">
       <button v-if="panel !== 'menu'" class="side-title__button button" @click="setPanel('menu')" v-title="'Main menu'">
-        <icon-arrow-left></icon-arrow-left>
+        <icon-dots-horizontal></icon-dots-horizontal>
       </button>
       <div class="side-title__title">
         {{panelName}}
@@ -18,8 +18,8 @@
       <publish-menu v-else-if="panel === 'publish'"></publish-menu>
       <history-menu v-else-if="panel === 'history'"></history-menu>
       <export-menu v-else-if="panel === 'export'"></export-menu>
-      <import-menu v-else-if="panel === 'import'"></import-menu>
-      <more-menu v-else-if="panel === 'more'"></more-menu>
+      <import-export-menu v-else-if="panel === 'importExport'"></import-export-menu>
+      <workspace-backup-menu v-else-if="panel === 'workspaceBackups'"></workspace-backup-menu>
       <div v-else-if="panel === 'help'" class="side-bar__panel side-bar__panel--help">
         <pre class="markdown-highlighting" v-html="markdownSample"></pre>
       </div>
@@ -39,9 +39,8 @@ import WorkspacesMenu from './menus/WorkspacesMenu';
 import SyncMenu from './menus/SyncMenu';
 import PublishMenu from './menus/PublishMenu';
 import HistoryMenu from './menus/HistoryMenu';
-import ExportMenu from './menus/ExportMenu';
-import ImportMenu from './menus/ImportMenu';
-import MoreMenu from './menus/MoreMenu';
+import ImportExportMenu from './menus/ImportExportMenu';
+import WorkspaceBackupMenu from './menus/WorkspaceBackupMenu';
 import markdownSample from '../data/markdownSample.md';
 import markdownConversionSvc from '../services/markdownConversionSvc';
 import store from '../store';
@@ -54,9 +53,8 @@ const panelNames = {
   sync: 'Synchronize',
   publish: 'Publish',
   history: 'File history',
-  export: 'Export to disk',
-  import: 'Import from disk',
-  more: 'More',
+  importExport: 'Import/export',
+  workspaceBackups: 'Workspace backups',
 };
 
 export default {
@@ -67,9 +65,8 @@ export default {
     SyncMenu,
     PublishMenu,
     HistoryMenu,
-    ExportMenu,
-    ImportMenu,
-    MoreMenu,
+    ImportExportMenu,
+    WorkspaceBackupMenu,
   },
   data: () => ({
     markdownSample: markdownConversionSvc.highlight(markdownSample),
@@ -177,8 +174,10 @@ export default {
   font-size: 0.95em;
 
   p {
-    margin: 10px;
-    line-height: 1.5;
+    margin: 10px 15px;
+    font-size: 0.9rem;
+    opacity: 0.67;
+    line-height: 1.3;
   }
 }
 </style>

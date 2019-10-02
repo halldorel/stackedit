@@ -2,6 +2,7 @@ import utils from '../../utils';
 import networkSvc from '../../networkSvc';
 import store from '../../../store';
 import userSvc from '../../userSvc';
+import badgeSvc from '../../badgeSvc';
 
 const request = ({ accessToken, serverUrl }, options) => networkSvc.request({
   ...options,
@@ -50,6 +51,7 @@ export default {
    * https://docs.gitlab.com/ee/api/oauth2.html
    */
   async startOauth2(serverUrl, applicationId, sub = null, silent = false) {
+    // Get an OAuth2 code
     const { accessToken } = await networkSvc.startOauth2(
       `${serverUrl}/oauth/authorize`,
       {
@@ -65,7 +67,7 @@ export default {
       url: 'user',
     });
     const uniqueSub = `${serverUrl}/${user.id}`;
-    userSvc.addInfo({
+    userSvc.addUserInfo({
       id: `${subPrefix}:${uniqueSub}`,
       name: user.username,
       imageUrl: user.avatar_url || '',
@@ -88,8 +90,10 @@ export default {
     store.dispatch('data/addGitlabToken', token);
     return token;
   },
-  addAccount(serverUrl, applicationId, sub = null) {
-    return this.startOauth2(serverUrl, applicationId, sub);
+  async addAccount(serverUrl, applicationId, sub = null) {
+    const token = await this.startOauth2(serverUrl, applicationId, sub);
+    badgeSvc.addBadge('addGitLabAccount');
+    return token;
   },
 
   /**
@@ -119,6 +123,7 @@ export default {
       params: {
         ref: branch,
         recursive: true,
+        per_page: 9999,
       },
     });
   },

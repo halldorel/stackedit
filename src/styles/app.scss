@@ -12,6 +12,7 @@ body {
 
   /* Prevent body overscroll on Chrome */
   overflow: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
 * {
@@ -273,10 +274,6 @@ textarea {
   position: absolute;
   top: 0;
   height: 100%;
-
-  & > * {
-    border-left: 2px solid transparent;
-  }
 }
 
 .gutter__background {
@@ -289,8 +286,8 @@ textarea {
   color: rgba(0, 0, 0, 0.33);
   position: absolute;
   left: 0;
-  padding: 2px 3px 2px 0;
-  width: 20px;
+  padding: 3px 3px 3px 0;
+  width: 22px;
   height: 21px;
   line-height: 1;
 
