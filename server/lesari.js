@@ -28,7 +28,7 @@ exports.publishLesari = (req, res) => {
   return new Promise((resolve, reject) => {
     if(req.body.fileContent) {
       console.log(`Got file content of length ${req.body.fileContent.length}`);
-      if(req.body.fileContent.length > 4000000) {
+      if(req.body.fileContent.length > 40000000) {
         reject("File is too big");
       }
     } else {

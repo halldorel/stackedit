@@ -35,7 +35,7 @@ module.exports = (app, serveV4) => {
   }
 
 
-  app.use(bodyParser.json());
+  app.use(bodyParser.json({limit:'50mb', extended: true}));
 
   app.get('/oauth2/githubToken', github.githubToken);
   app.get('/conf', (req, res) => res.send(conf.publicValues));
