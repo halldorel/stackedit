@@ -22,6 +22,6 @@ export default {
     'badgeCreations',
     'serverConf',
   ],
-  textMaxLength: 250000,
+  textMaxLength: 1000000,
   defaultName: 'Untitled',
 };
